@@ -1,0 +1,26 @@
+{
+  "name": "playwrightvibetesting",
+  "version": "1.0.0",
+  "description": "Resources for the Udemy course. Everything you need to follow along is in this repo.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcossioa/playwrightvibetesting.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pcossioa/playwrightvibetesting/issues"
+  },
+  "homepage": "https://github.com/pcossioa/playwrightvibetesting#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
+  }
+}

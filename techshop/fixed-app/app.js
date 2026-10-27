@@ -46,7 +46,7 @@ let lastOrder = null;
 /* ══════════════════════════════════════════
    NAVIGATION
 ══════════════════════════════════════════ */
-let isLoggedIn = false;
+let isLoggedIn = sessionStorage.getItem('loggedIn') === '1';
 
 const PAGES = ['login', 'products', 'cart', 'checkout', 'confirm'];
 const PROTECTED = ['products', 'cart', 'checkout', 'confirm'];
@@ -97,7 +97,7 @@ function markInput(id, hasError) {
 /* ══════════════════════════════════════════
    LOGIN
 ══════════════════════════════════════════ */
-const VALID_USERS = ['admin', 'demo@techshop.com'];
+const VALID_USERS = ['demo@techshop.com'];
 
 function fixedLogin() {
   const user = document.getElementById('login-user').value.trim();
@@ -123,6 +123,7 @@ function fixedLogin() {
 
   document.getElementById('login-error').classList.add('hidden');
   isLoggedIn = true;
+  sessionStorage.setItem('loggedIn', '1');
   showPage('products');
 }
 
@@ -341,8 +342,13 @@ function fixedPlaceOrder() {
     { id: 'co-email',     errId: 'err-email',      test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
     { id: 'co-phone',     errId: 'err-phone',      test: v => /^[\d\s\-\+\(\)]{7,20}$/.test(v.trim()) },
     { id: 'co-card',      errId: 'err-card',       test: v => v.replace(/\s/g, '').length === 16 },
-    { id: 'co-expiry',    errId: 'err-expiry',     test: v => /^\d{2}\/\d{2}$/.test(v.trim()) },
-    { id: 'co-cvv',       errId: 'err-cvv',        test: v => /^\d{3,4}$/.test(v.trim()) },
+    { id: 'co-expiry',    errId: 'err-expiry',     test: v => {
+        const m = /^(0[1-9]|1[0-2])\/(\d{2})$/.exec(v.trim());
+        if (!m) return false;
+        const now = new Date(), year = 2000 + Number(m[2]);
+        return year > now.getFullYear() || (year === now.getFullYear() && Number(m[1]) >= now.getMonth() + 1);
+      } },
+    { id: 'co-cvv',       errId: 'err-cvv',        test: v => /^\d{3}$/.test(v.trim()) },
   ];
 
   checks.forEach(c => {
@@ -412,4 +418,4 @@ function renderConfirmationPage() {
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-showPage('login');
+showPage(isLoggedIn ? 'products' : 'login');
